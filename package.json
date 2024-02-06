@@ -1,0 +1,48 @@
+{
+  "name": "snowflakeid",
+  "version": "1.0.0",
+  "description": "Snowflake ID is a unique identifier commonly used in distributed systems to generate unique IDs with a timestamp component. It is designed to ensure uniqueness, even in distributed and highly concurrent environments.",
+  "scripts": {
+    "rollup": "rollup -c",
+    "test": "jest"
+  },
+  "author": "Sebastian Korotkiewicz",
+  "license": "MIT",
+  "keywords": [
+    "snowflake",
+    "encode",
+    "decode"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skorotkiewicz/snowflake.git"
+  },
+  "bugs": {
+    "url": "https://github.com/skorotkiewicz/snowflake/issues"
+  },
+  "homepage": "https://github.com/skorotkiewicz/snowflake#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-typescript": "^7.9.0",
+    "@rollup/plugin-commonjs": "^21.1.0",
+    "@rollup/plugin-node-resolve": "^7.1.3",
+    "@rollup/plugin-typescript": "^8.3.2",
+    "@types/jest": "^27.4.1",
+    "jest": "^27.5.1",
+    "rollup": "^2.70.1",
+    "rollup-plugin-dts": "^4.2.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.6.3"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "dependencies": {},
+  "funding": {
+    "type": "individual",
+    "url": "https://paypal.me/skorotkiewicz"
+  }
+}

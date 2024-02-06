@@ -1,5 +1,12 @@
-class Snowflake {
-  constructor(machineId) {
+export class Snowflake {
+  private machineId: bigint;
+  private sequence: bigint;
+  private lastTimestamp: bigint;
+  private readonly timestampShift: bigint = 22n;
+  private readonly machineIdShift: bigint = 12n;
+  private readonly sequenceMask: bigint = 0xfffn;
+
+  constructor(machineId: number) {
     if (machineId < 0 || machineId >= 1024) {
       throw new Error("Machine ID must be in the range 0-1023.");
     }
@@ -7,13 +14,9 @@ class Snowflake {
     this.machineId = BigInt(machineId);
     this.sequence = BigInt(0);
     this.lastTimestamp = BigInt(-1);
-
-    this.timestampShift = 22n;
-    this.machineIdShift = 12n;
-    this.sequenceMask = 0xfffn;
   }
 
-  async generate() {
+  async generate(): Promise<string> {
     let timestamp = BigInt(Date.now());
 
     if (timestamp === this.lastTimestamp) {
@@ -40,17 +43,23 @@ class Snowflake {
   }
 }
 
-function decodeSnowflake(idStr) {
+interface DecodedSnowflake {
+  timestamp: string;
+  machineId: string;
+  sequence: string;
+}
+
+export function decodeSnowflake(idStr: string): DecodedSnowflake {
   const id = BigInt(idStr);
   const timestampShift = 22n;
   const machineIdShift = 12n;
   const sequenceMask = 0xfffn;
 
-  const timestamp = (id >> timestampShift) & 0x1ffffffffffn; // Adjusting the shift
+  const timestamp = (id >> timestampShift) & 0x1ffffffffffn;
   const machineId = (id >> machineIdShift) & 0x3ffn;
   const sequence = id & sequenceMask;
 
-  const date = new Date(Number(timestamp)); // Converting BigInt to Number, then to Date
+  const date = new Date(Number(timestamp));
 
   return {
     timestamp: date.toISOString(),
@@ -58,15 +67,3 @@ function decodeSnowflake(idStr) {
     sequence: sequence.toString(),
   };
 }
-
-// Use
-(async () => {
-  const machineId = 1; // machine ID (0-1023)
-  const snowflake = new Snowflake(machineId);
-
-  const id1 = await snowflake.generate();
-  console.log("encodeID", id1);
-
-  const decoded = decodeSnowflake(id1);
-  console.log("decodeID", decoded);
-})();
