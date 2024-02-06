@@ -1,9 +1,10 @@
 class Snowflake {
-  constructor(machineId) {
+  constructor(machineId, epoch) {
     if (machineId < 0 || machineId >= 1024) {
       throw new Error("Machine ID must be in the range 0-1023.");
     }
 
+    this.epoch = BigInt(epoch); // Ustawienie epoki
     this.machineId = BigInt(machineId);
     this.sequence = BigInt(0);
     this.lastTimestamp = BigInt(-1);
@@ -14,15 +15,16 @@ class Snowflake {
     this.sequenceMask = 0xfffn; // 4095 w dziesiętnym, BigInt
   }
 
-  generate() {
-    let timestamp = BigInt(Date.now());
+  async generate() {
+    let timestamp = BigInt(Date.now()) - this.epoch; // Odejmowanie epoki
 
     if (timestamp === this.lastTimestamp) {
       this.sequence = (this.sequence + 1n) & this.sequenceMask;
 
       if (this.sequence === 0n) {
         while (timestamp <= this.lastTimestamp) {
-          timestamp = BigInt(Date.now());
+          await new Promise((resolve) => setTimeout(resolve, 1)); // Opóźnienie 1 ms
+          timestamp = BigInt(Date.now()) - this.epoch;
         }
       }
     } else {
@@ -40,10 +42,8 @@ class Snowflake {
   }
 }
 
-function decodeSnowflake(idStr) {
+function decodeSnowflake(idStr, epoch) {
   const id = BigInt(idStr);
-  const binary = id.toString(2).padStart(64, "0");
-
   const timestampShift = 22n;
   const machineIdShift = 12n;
   const sequenceMask = 0xfffn; // 12 bitów na sekwencję
@@ -52,9 +52,8 @@ function decodeSnowflake(idStr) {
   const machineId = (id >> machineIdShift) & 0x3ffn; // 10 bitów na ID maszyny
   const sequence = id & sequenceMask;
 
-  // Upewnij się, że epoka jest taka sama, jak użyta do generowania Snowflake IDs
-  const epoch = BigInt(1288834974657); // Powinna być taka sama, jak w generatorze
-  const date = new Date(Number(epoch + timestamp * 1000n));
+  const epochBigInt = BigInt(epoch); // Upewnij się, że epoka jest BigInt
+  const date = new Date(Number(epochBigInt + timestamp * 1000n)); // Dodaj epokę do czasu
 
   return {
     timestamp: date,
@@ -64,12 +63,15 @@ function decodeSnowflake(idStr) {
 }
 
 // Użycie
-const machineId = 1; // ID maszyny (0-1023)
-const snowflake = new Snowflake(machineId);
+(async () => {
+  const machineId = 1; // ID maszyny (0-1023)
+  const epoch = 1288834974657; // Ustawienie epoki
+  const snowflake = new Snowflake(machineId, epoch);
 
-const id1 = snowflake.generate();
-console.log("encodeID", id1);
+  const id1 = await snowflake.generate();
+  console.log("encodeID", id1);
 
-const idStr = id1; // Przykładowy identyfikator Snowflake
-const decoded = decodeSnowflake(idStr);
-console.log("decodeID", decoded);
+  const idStr = id1; // Przykładowy identyfikator Snowflake
+  const decoded = decodeSnowflake(idStr, epoch);
+  console.log("decodeID", decoded);
+})();
