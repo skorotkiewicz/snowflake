@@ -35,5 +35,4 @@ import { Snowflake, decodeSnowflake } from "@skorotkiewicz/snowflake-id";
   console.log("decodeID", decoded);
   // output: { timestamp: '2024-02-06T05:12:47.730Z', machineId: '1', sequence: '0' }
 })();
-};
 ```
