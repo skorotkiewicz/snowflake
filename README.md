@@ -1,4 +1,4 @@
-# snowflakeid
+# @skorotkiewicz/snowflake-id
 
 > Snowflake ID is a unique identifier commonly used in distributed systems to generate unique IDs with a timestamp component. It is designed to ensure uniqueness, even in distributed and highly concurrent environments.
 
@@ -13,15 +13,15 @@ By combining these components, Snowflake IDs provide a reliable way to generate 
 ## Install
 
 ```
-yarn add snowflakeid
+yarn add @skorotkiewicz/snowflake-id
 or
-npm i snowflakeid
+npm i @skorotkiewicz/snowflake-id
 ```
 
 ## Usage
 
 ```js
-import { Snowflake, decodeSnowflake } from "snowflakeid";
+import { Snowflake, decodeSnowflake } from "@skorotkiewicz/snowflake-id";
 
 (async () => {
   const machineId = 1; // machine ID (0-1023)

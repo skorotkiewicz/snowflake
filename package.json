@@ -1,5 +1,5 @@
 {
-  "name": "snowflakeid",
+  "name": "@skorotkiewicz/snowflake-id",
   "version": "1.0.0",
   "description": "Snowflake ID is a unique identifier commonly used in distributed systems to generate unique IDs with a timestamp component. It is designed to ensure uniqueness, even in distributed and highly concurrent environments.",
   "scripts": {
