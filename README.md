@@ -29,9 +29,11 @@ import { Snowflake, decodeSnowflake } from "@skorotkiewicz/snowflake-id";
 
   const id1 = await snowflake.generate();
   console.log("encodeID", id1);
+  // output: 7160521316708126720
 
   const decoded = decodeSnowflake(id1);
   console.log("decodeID", decoded);
+  // output: { timestamp: '2024-02-06T05:12:47.730Z', machineId: '1', sequence: '0' }
 })();
 };
 ```
